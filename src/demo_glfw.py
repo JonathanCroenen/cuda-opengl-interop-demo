@@ -1,3 +1,17 @@
+"""
+Interoperability demo between CUDA and OpenGL in a realtime application using GLFW
+for window and GL context creation. CUDA is accessed through the cuda-python package and OpenGL
+is used through PyOpenGL. This demo requires NVRTC from the CUDA toolkit
+to compile kernels at runtime, therefore the CUDA_HOME environment variable must
+be set to point to a local or conda toolkit installation.
+
+This demo shows how to transfer a renderbuffer/texture to CUDA, to edit it with a
+kernel, and then back to OpenGL for displaying.
+
+author: Jonathan Croenen
+"""
+
+
 import glfw
 import numpy as np
 from opengl_utils import *
@@ -194,7 +208,7 @@ def main():
         glfw.poll_events()
         glfw.swap_buffers(window)
 
-    # cleanup all the resources
+    # cleanup all the GPU resources
     cleanup_cuda(
         output_array,
         output_surface,

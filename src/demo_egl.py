@@ -1,3 +1,21 @@
+"""
+Interoperability demo between CUDA and OpenGL for offscreen rendering using EGL
+for context creation. CUDA is accessed through the cuda-python package and OpenGL
+and EGL are used through PyOpenGL. This demo requires NVRTC from the CUDA toolkit
+to compile kernels at runtime, therefore the CUDA_HOME environment variable must
+be set to point to a local or conda toolkit installation.
+
+The demo shows how to transfer a renderbuffer/texture to CUDA, to edit it by a
+kernel, and then back to OpenGL. In each important step, the image is pulled
+from the GPU, either through OpenGL or CUDA, to show the results of the operation.
+
+author: Jonathan Croenen
+"""
+
+import os
+# makes it so that PyOpenGL prioritizes egl over the native platform api
+os.environ["PYOPENGL_PLATFORM"] = "egl"
+
 from cuda import cuda, cudart  # type: ignore
 import OpenGL.EGL as egl
 import OpenGL.GL as gl
@@ -7,10 +25,6 @@ from opengl_utils import *
 from cuda_utils import *
 import numpy as np
 import matplotlib.pyplot as plt
-
-import os
-# so that PyOpenGL prioritizes egl over the native api
-os.environ["PYOPENGL_PLATFORM"] = "egl"
 
 
 VERTEX_SHADER_SOURCE = """
@@ -268,7 +282,7 @@ def main():
     plt.tight_layout(pad=0.5)
     plt.show()
 
-    # cleanup all the resources
+    # cleanup all the GPU resources
     cleanup_cuda(
         output_array,
         input_texture,
